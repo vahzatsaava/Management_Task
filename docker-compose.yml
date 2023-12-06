@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  postgres-shop:
+    container_name: postgres-task
+    image: postgres
+    environment:
+      POSTGRES_USER: author
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: tasks
+      PGDATA: /data/PostTestApi
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - app
+
+  redis:
+    container_name: task-cash
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - app
+
+volumes:
+  postgres:
+    external: true
+networks:
+  app:
+    driver: bridge
+
+
+
+
+
+

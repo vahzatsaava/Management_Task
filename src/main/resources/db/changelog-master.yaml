@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: db/changeset/2023-05-12-1-add_user.yaml
+  - include:
+      file: db/changeset/2023-05-12-2-add_roles.yaml
+  - include:
+      file: db/changeset/2023-05-12-3-add_tusks.yaml
+  - include:
+      file: db/changeset/2023-05-12-4-add_comments.yaml

@@ -1,0 +1,31 @@
+server:
+  port: 8088
+
+spring:
+  liquibase:
+    enabled: true
+    drop-first: false
+    change-log: classpath:db/changelog-master.yaml
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/tasks
+    username: author
+    password: password
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+jwt:
+  secret: my-super-secret-key
+  expiration: 2592000000 # one month or 30 days
+
+

@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: createRolesTable
+      author: Tsaava Vazha
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+  - changeSet:
+      id: createUsersRolesTable1
+      author: Tsaava Vazha
+      changes:
+        - createTable:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: role_id
+                  type: BIGINT
+  - changeSet:
+      id: insertRoles
+      author: Tsaava Vazha
+      changes:
+        - sql:
+            sql: INSERT INTO roles(name) VALUES ('ROLE_USER'),('ROLE_ADMIN')

@@ -1,0 +1,55 @@
+databaseChangeLog:
+  - changeSet:
+      id: createTaskEntityTable
+      author: Tsaava Vazha
+      changes:
+        - createTable:
+            tableName: tasks
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: header
+                  type: VARCHAR(255)
+                  constraints:
+                    - nullable: false
+                    - unique: true
+              - column:
+                  name: definition
+                  type: VARCHAR(255)
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+              - column:
+                  name: priority
+                  type: VARCHAR(255)
+              - column:
+                  name: created
+                  type: TIMESTAMP
+              - column:
+                  name: finished
+                  type: TIMESTAMP
+              - column:
+                  name: author_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_task_entity_author
+                    referencedColumnNames: id
+                    referencedTableName: users
+                    onDelete: CASCADE
+                    onUpdate: CASCADE
+              - column:
+                  name: executor_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_task_entity_executor
+                    referencedColumnNames: id
+                    referencedTableName: users
+                    onDelete: CASCADE
+                    onUpdate: CASCADE
