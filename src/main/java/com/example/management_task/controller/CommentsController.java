@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 
@@ -23,25 +24,30 @@ public class CommentsController {
     private final CommentsService commentsService;
 
     @PostMapping("/create")
-    public ResponseEntity<TaskModel> addComment(@Valid @RequestBody CommentsInputDto commentsInputDto) {
-        return new ResponseEntity<>(commentsService.save(commentsInputDto), HttpStatus.CREATED);
+    public ResponseEntity<TaskModel> addComment(@Valid @RequestBody CommentsInputDto commentsInputDto, Principal principal) {
+        return new ResponseEntity<>(commentsService.save(commentsInputDto, principal), HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<TaskModel> updateComment(@Valid @RequestBody CommentsUpdateDto commentsInputDto) {
-        return new ResponseEntity<>(commentsService.updateComment(commentsInputDto), HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteComment(@PathVariable Long id) {
-        String msg = String.format("msg by id : %s was successfully deleted", id);
-        commentsService.delete(id);
-        return new ResponseEntity<>(msg, HttpStatus.OK);
+    public ResponseEntity<TaskModel> updateComment(@Valid @RequestBody CommentsUpdateDto commentsInputDto, Principal principal) {
+        return new ResponseEntity<>(commentsService.updateComment(commentsInputDto, principal), HttpStatus.CREATED);
     }
 
     @GetMapping("/all-task-comments/{id}")
     public ResponseEntity<List<CommentsModel>> getAllCommentsByTaskId(@PathVariable Long id) {
         return new ResponseEntity<>(commentsService.getTaskComments(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/all-my-comments")
+    public ResponseEntity<List<CommentsModel>> getAllMyComments(Principal principal) {
+        return new ResponseEntity<>(commentsService.getMyComments(principal), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete-by-comment-creator/{commentId}")
+    public ResponseEntity<String> deleteByCommentAuthor(@PathVariable Long commentId, Principal principal) {
+        String msg = String.format("msg by id : %s was successfully deleted", commentId);
+        commentsService.deleteByCommentAuthor(commentId, principal);
+        return new ResponseEntity<>(msg, HttpStatus.OK);
     }
 
 }

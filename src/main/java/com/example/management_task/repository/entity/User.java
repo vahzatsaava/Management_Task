@@ -24,6 +24,9 @@ public class User {
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
+
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private Set<TaskEntity> authoredTasks;
@@ -41,7 +44,7 @@ public class User {
     )
     private Set<Role> roles;
 
-    @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "author",cascade = CascadeType.ALL,orphanRemoval = true)
     @ToString.Exclude
     private List<Comments> comments;
 }

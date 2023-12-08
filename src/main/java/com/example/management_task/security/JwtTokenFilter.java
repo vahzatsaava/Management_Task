@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final TokenBlacklistService tokenBlacklistService;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -42,7 +44,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 log.debug("Sign is wrong");
             }
         }
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null){
+        if (email != null && !tokenBlacklistService.isTokenBlacklisted(jwt) && SecurityContextHolder.getContext().getAuthentication() == null) {
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                     email,
                     null,

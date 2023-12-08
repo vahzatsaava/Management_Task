@@ -54,6 +54,7 @@ public class AuthorTaskServiceImpl implements AuthorTaskService {
     @Override
     @Transactional
     public TaskModel updateTask(TaskUpdateInputDto updateInputDto, Principal principal) {
+
         TaskEntity currentEntity = findByIdAndAuthorEmail(updateInputDto.getTaskId(), principal.getName());
         currentEntity.setDefinition(updateInputDto.getDefinition());
         currentEntity.setHeader(updateInputDto.getHeader());

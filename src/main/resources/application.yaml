@@ -26,6 +26,6 @@ spring:
 
 jwt:
   secret: my-super-secret-key
-  expiration: 2592000000 # one month or 30 days
+  expiration: 2592000000
 
 
