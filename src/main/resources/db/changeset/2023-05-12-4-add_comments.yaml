@@ -15,7 +15,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: text
-                  type: VARCHAR(255)
+                  type: TEXT
               - column:
                   name: created
                   type: TIMESTAMP

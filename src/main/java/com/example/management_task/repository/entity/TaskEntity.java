@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 
 @EqualsAndHashCode(exclude = {
         "author",
-        "executor"
+        "executor",
+        "comments"
 })
 @Getter
 @Setter
@@ -29,8 +29,10 @@ public class TaskEntity {
 
     private String definition;
 
+    @Enumerated(EnumType.STRING)
     private TuskStatus status;
 
+    @Enumerated(EnumType.STRING)
     private Priority priority;
 
     private LocalDateTime created;

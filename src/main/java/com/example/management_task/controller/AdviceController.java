@@ -2,7 +2,6 @@ package com.example.management_task.controller;
 
 import com.example.management_task.exceprtions.ErrorResponse;
 import com.example.management_task.exceprtions.TaskException;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -50,13 +49,17 @@ public class AdviceController {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
         log.error(e.getMessage(), e);
-        return new ResponseEntity<>(new ErrorResponse("Access denied"), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new ErrorResponse("Access denied," +
+                " you dont have any rights or your profile was deleted before"), HttpStatus.UNAUTHORIZED);
     }
     @ExceptionHandler(TaskException.class)
     public ResponseEntity<ErrorResponse> taskHandleException(TaskException e) {
         log.error(e.getMessage(), e);
         return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
-
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<String> handleAuthenticationException(AuthenticationException e) {
+        return new ResponseEntity<>("Unauthorized: " + e.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
 
 }

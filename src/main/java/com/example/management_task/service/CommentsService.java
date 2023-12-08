@@ -5,14 +5,18 @@ import com.example.management_task.dto.comments_dto.CommentsUpdateDto;
 import com.example.management_task.model.CommentsModel;
 import com.example.management_task.model.TaskModel;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface CommentsService {
-    TaskModel save(CommentsInputDto comments);
 
-    TaskModel updateComment(CommentsUpdateDto commentsDto);
+    TaskModel save(CommentsInputDto commentsInput, Principal principal);
 
-    void delete(Long id);
+    TaskModel updateComment(CommentsUpdateDto commentsDto, Principal principal);
+
+    void deleteByCommentAuthor(Long id, Principal principal);
 
     List<CommentsModel> getTaskComments(Long taskId);
+
+    List<CommentsModel> getMyComments(Principal principal);
 }

@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,16 +33,17 @@ public class CommentsServiceImpl implements CommentsService {
     private final AuthorTaskService authorTaskService;
     private final UserService userService;
 
+
     @Override
     @Transactional
-    public TaskModel save(CommentsInputDto commentsInput) {
+    public TaskModel save(CommentsInputDto commentsInput, Principal principal) {
         TaskEntity taskEntity = authorTaskService.findTaskByID(commentsInput.getTaskId());
         Comments comments = new Comments();
         comments.setTask(taskEntity);
         comments.setText(commentsInput.getText());
         comments.setCreated(LocalDateTime.now());
 
-        User commentsAuthor = userService.findUserById(commentsInput.getUserId());
+        User commentsAuthor = userService.getCurrentUser(principal);
         comments.setAuthor(commentsAuthor);
         commentsRepository.save(comments);
 
@@ -50,8 +52,8 @@ public class CommentsServiceImpl implements CommentsService {
 
     @Override
     @Transactional
-    public TaskModel updateComment(CommentsUpdateDto commentsDto) {
-        Comments comments = findById(commentsDto.getCommentsId());
+    public TaskModel updateComment(CommentsUpdateDto commentsDto, Principal principal) {
+        Comments comments = findByIdAndEmail(commentsDto.getCommentsId(), principal.getName());
         comments.setText(commentsDto.getText());
         return taskMapper.toTaskModel(comments.getTask());
 
@@ -59,10 +61,11 @@ public class CommentsServiceImpl implements CommentsService {
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        Comments comments = findById(id);
+    public void deleteByCommentAuthor(Long id, Principal principal) {
+        Comments comments = findByIdAndEmail(id, principal.getName());
         commentsRepository.delete(comments);
     }
+
 
     @Override
     public List<CommentsModel> getTaskComments(Long taskId) {
@@ -72,8 +75,17 @@ public class CommentsServiceImpl implements CommentsService {
                 .toList();
     }
 
-    public Comments findById(Long id) {
-        return commentsRepository.findById(id)
-                .orElseThrow(() -> new CommentsExistException("Comment is not exist by id: " + id));
+    @Override
+    public List<CommentsModel> getMyComments(Principal principal) {
+        User currentUser = userService.getCurrentUser(principal);
+        return currentUser.getComments().stream()
+                .map(commentsMapper::toCommentsModel)
+                .toList();
+    }
+
+    public Comments findByIdAndEmail(Long id, String email) {
+        return commentsRepository.findByIdAndAuthorEmail(id, email)
+                .orElseThrow(() -> new CommentsExistException
+                        (String.format("Comment with id %d and email  %s does not exist", id, email)));
     }
 }

@@ -3,8 +3,11 @@ package com.example.management_task.service.impl;
 import com.example.management_task.dto.UserCreateDto;
 import com.example.management_task.mapping.UserMapper;
 import com.example.management_task.model.UserModel;
+import com.example.management_task.redis_session.TokenCasheService;
 import com.example.management_task.repository.UserRepository;
 import com.example.management_task.repository.entity.User;
+import com.example.management_task.repository.entity.UserStatus;
+import com.example.management_task.security.TokenBlacklistService;
 import com.example.management_task.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.util.Optional;
 
 
 @Slf4j
@@ -24,6 +28,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final TokenCasheService casheService;
+    private final TokenBlacklistService tokenBlacklistService;
 
 
     @Override
@@ -40,6 +46,10 @@ public class UserServiceImpl implements UserService {
         created.setName(userCreateDto.getName());
         created.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
 
+        Optional<String> jwt = casheService.getCachedTokenForEmail(principal.getName());
+        jwt.ifPresent(tokenBlacklistService::blacklistToken);
+        casheService.delete(principal.getName());
+
         return userMapper.toUserModel(created);
     }
 
@@ -47,7 +57,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteOwnProfile(Principal principal) {
         User userByPrincipal = findByEmail(principal.getName());
-        userRepository.delete(userByPrincipal);
+        userByPrincipal.setStatus(UserStatus.DELETE);
+
+
+        Optional<String> jwt = casheService.getCachedTokenForEmail(principal.getName());
+        jwt.ifPresent(tokenBlacklistService::blacklistToken);
+        casheService.delete(principal.getName());
+
     }
 
     @Override
