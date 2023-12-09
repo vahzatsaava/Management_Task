@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,10 +40,17 @@ public class AuthorTaskController {
     @Operation(summary = "[Author] Get a task by ID",
             description = "This API is used by authors to get a task by its ID.")
     @GetMapping("/task-by-id/{taskId}")
-    public ResponseEntity<TaskModel> getTaskById(@ApiParam(value = "ID of the task", required = true)
-                                                     @PathVariable Long taskId) {
+    public ResponseEntity<TaskModel> getTaskById(@PathVariable Long taskId) {
         return new ResponseEntity<>(authorTaskService.findById(taskId), HttpStatus.OK);
     }
+
+    @Operation(summary = "[Author] Get a author tasks by principal",
+            description = "This API is used by authors to get all tasks by its principal.")
+    @GetMapping("/all-tasks")
+    public ResponseEntity<List<TaskModel>> getAllAuthorTasks(Principal principal) {
+        return new ResponseEntity<>(authorTaskService.getAllTasksByAuthor(principal), HttpStatus.OK);
+    }
+
 
     @Operation(summary = "[Author] Delete own task",
             description = "This API is used by authors to delete their own task.")

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
     private final AdminService adminService;
 
-    @PatchMapping("/add-admin-to user-role")
+    @PatchMapping("/add-admin-role/to-user")
     public ResponseEntity<UserModel> addAdminRightsToUser(String email){
         return new ResponseEntity<>(adminService.addAdminRightsToCurrentUser(email), HttpStatus.OK);
     }

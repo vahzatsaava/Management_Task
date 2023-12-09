@@ -6,6 +6,7 @@ import com.example.management_task.model.TaskModel;
 import com.example.management_task.repository.entity.TaskEntity;
 
 import java.security.Principal;
+import java.util.List;
 
 public interface AuthorTaskService {
     TaskModel createTask(TaskCreateInputDto taskCreateInputDto, Principal principal);
@@ -17,4 +18,6 @@ public interface AuthorTaskService {
     void delete(Long id, Principal principal);
 
     TaskEntity findTaskByID(Long id);
+
+    List<TaskModel> getAllTasksByAuthor(Principal principal);
 }
