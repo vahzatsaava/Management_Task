@@ -2,7 +2,9 @@ package com.example.management_task.dto;
 
 import com.example.management_task.repository.entity.Priority;
 import com.example.management_task.repository.entity.TuskStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+
 
 
 @Data
@@ -13,6 +15,7 @@ public class SearchFilterRequest {
     private TuskStatus tuskStatus;
     private Priority priority;
 
-    private Integer pageSize = 10;
-    private Integer pageNumber = 0;
+    @Schema(defaultValue = "10")
+    private Integer pageSize;
+    private Integer pageNumber;
 }

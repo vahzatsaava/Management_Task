@@ -5,13 +5,11 @@ import com.example.management_task.dto.tasks_dto.TaskUpdateInputDto;
 import com.example.management_task.mapping.TaskMapper;
 import com.example.management_task.model.TaskModel;
 import com.example.management_task.repository.TaskRepository;
-import com.example.management_task.repository.UserRepository;
 import com.example.management_task.repository.entity.Priority;
 import com.example.management_task.repository.entity.TaskEntity;
 import com.example.management_task.repository.entity.TuskStatus;
 import com.example.management_task.repository.entity.User;
 import com.example.management_task.service.UserService;
-import org.hibernate.mapping.Any;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

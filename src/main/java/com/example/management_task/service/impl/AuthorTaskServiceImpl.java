@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -87,6 +88,15 @@ public class AuthorTaskServiceImpl implements AuthorTaskService {
     public TaskEntity findTaskByID(Long id) {
         return taskRepository.findById(id)
                 .orElseThrow(() -> new TaskException("Task is not exist by id " + id));
+    }
+
+    @Override
+    public List<TaskModel> getAllTasksByAuthor(Principal principal) {
+        User currentUser = userService.getCurrentUser(principal);
+        return currentUser.getAuthoredTasks()
+                .stream()
+                .map(taskMapper::toTaskModel)
+                .toList();
     }
 
     private TaskEntity findByIdAndAuthorEmail(Long id, String email) {
